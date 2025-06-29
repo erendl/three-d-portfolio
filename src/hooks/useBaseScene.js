@@ -33,7 +33,7 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
 
     window.addEventListener('mousemove', handleMouseMove);
     
-    loader.load('/src/assets/models/scene_editor.glb', (gltf) => {
+    loader.load('/assets/models/scene_editor.glb', (gltf) => {
       const gpencil = gltf.scene.getObjectByName(orbitPoint);
       if (gpencil) {
         scene.add(gpencil);
@@ -106,7 +106,7 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       erenDiv.style.backgroundColor = 'none';
       erenDiv.style.fontFamily = 'monospace';
       erenDiv.style.whiteSpace = 'pre';
-      erenDiv.style.backgroundImage = 'url(src/assets/images/terminal.png)';
+      erenDiv.style.backgroundImage = 'url(/assets/images/terminal.png)';
       erenDiv.style.backgroundSize = 'cover';
       erenDiv.style.backgroundPosition = 'center';
       erenDiv.style.backgroundOpacity = '0.5';
