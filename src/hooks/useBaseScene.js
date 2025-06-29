@@ -63,6 +63,10 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       controls.rotateSpeed = 0.03;
       controls.zoomSpeed = 0.1;
       controls.panSpeed = 0.04;
+      if (window.innerWidth <= 768) {
+        console.log(camera.position);
+        camera.position.set(3.83, 3, 6)
+      }
 
       // Create About Me label
 /*       const aboutDiv = document.createElement('div');
