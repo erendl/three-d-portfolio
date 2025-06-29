@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
-export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoading}) {
+export function useBaseScene({cameraIndex = 0}, {setLoading}) {
   const mousePosition = useRef({ x: 0, y: 0 });
   
   useEffect(() => {
@@ -26,15 +26,15 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
 
     const handleMouseMove = (event) => {
       mousePosition.current = {
-        x: (event.clientX / window.innerWidth) * 2 - 1,
-        y: -(event.clientY / window.innerHeight) * 2 + 1
+        x: (event.clientX / window.innerWidth) * 2,
+        y: -(event.clientY / window.innerHeight) * 2
       };
     };
 
     window.addEventListener('mousemove', handleMouseMove);
     
     loader.load('/assets/models/scene_editor.glb', (gltf) => {
-      const gpencil = gltf.scene.getObjectByName(orbitPoint);
+      const gpencil = gltf.scene.getObjectByName("Gpencil");
       if (gpencil) {
         scene.add(gpencil);
       } else {
@@ -52,53 +52,32 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
 
       camera = gltf.cameras[cameraIndex];
       camera.aspect = window.innerWidth / window.innerHeight;
+      camera.rotation.set(-0.4314569990246626, 0.5350401718310553, 0.28675455599246913)
+      camera.position.set(2.522228232880101,2.426328964614322, 3.9387430148330766)
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
       labelRenderer.setSize(window.innerWidth, window.innerHeight);
+      console.log(camera.position,"camera position")
+      
 
       const controls = new OrbitControls(camera, renderer.domElement);
-
+      camera.rotation.set(-0.4314569990246626, 0.5350401718310553, 0.28675455599246913)
+      camera.position.set(2.522228232880101,2.426328964614322, 3.9387430148330766)
+      console.log(camera.rotation,"camera rotation")
+      
       const initialRotation = camera.rotation.clone();
-
-      controls.rotateSpeed = 0.03;
+      
+      controls.rotateSpeed = 0.4;
       controls.zoomSpeed = 0.1;
-      controls.panSpeed = 0.04;
+      controls.panSpeed = 0.4;
+      controls.enableDamping = true
+      console.log(controls.target,"controls target")
       if (window.innerWidth <= 768) {
-        console.log(camera.position);
         camera.position.set(3.83, 3, 6)
       }
 
-      // Create About Me label
-/*       const aboutDiv = document.createElement('div');
-      aboutDiv.className = 'label';
-      // Animated text setup
-      const aboutText = 'About Me';
-      aboutDiv.textContent = '';
-      aboutDiv.style.padding = '8px 16px';
-      aboutDiv.style.color = 'rgb(0, 0, 0)';
-      aboutDiv.style.borderRadius = '0px';
-      aboutDiv.style.fontSize = '1.5rem';
-      aboutDiv.style.backgroundColor = 'transparent'; // Initially transparent
-      aboutDiv.style.fontFamily = 'Arial';
-      aboutDiv.style.whiteSpace = 'nowrap';
-      const aboutLabel = new CSS2DObject(aboutDiv);
-      aboutLabel.position.set(-9, -2, -4); // Adjust position as needed
-      scene.add(aboutLabel); */
 
-      // Animate text letter by letter for About Me
-      let letterIndex = 0;
-      function revealNextLetter() {
-        if (letterIndex === 0) {
-          aboutDiv.style.backgroundColor = 'rgb(242, 255, 0)'; // Set yellow when animation starts
-        }
-        if (letterIndex <= aboutText.length) {
-          aboutDiv.textContent = aboutText.slice(0, letterIndex);
-          letterIndex++;
-          setTimeout(revealNextLetter, 100); // Adjust speed as needed
-        }
-      }
-
-      // Create second label for Eren's intro
+      // Create label for intro
       const erenDiv = document.createElement('div');
       erenDiv.className = 'label';
       const erenText = "\nlorem ipsum dolor\nsit amet\nconsectetur adipisicing\nelit. Quisquam, quos.";
@@ -124,16 +103,13 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
       erenLabel.position.set(0, -2, 0); // Position below About Me
       scene.add(erenLabel);
 
-      // Animate text letter by letter for Eren's intro
+      // Animate text letter by letter for intro
       let erenLetterIndex = 0;
       function revealErenNextLetter() {
         if (erenLetterIndex <= erenText.length) {
           erenDiv.textContent = erenText.slice(0, erenLetterIndex);
           erenLetterIndex++;
           setTimeout(revealErenNextLetter, 40); // Faster speed for effect
-        } else {
-          // Start About Me after Eren finishes
-          setTimeout(revealNextLetter, 300);
         }
       }
       // Start Eren's intro animation first
@@ -158,9 +134,11 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
 
         // Create a THREE video texture
         const videoTexture = new THREE.VideoTexture(video);
-        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.minFilter = THREE.LinearMipMapLinearFilter; // Use mipmaps for smoother scaling
         videoTexture.magFilter = THREE.LinearFilter;
         videoTexture.format = THREE.RGBAFormat;
+        videoTexture.generateMipmaps = true;
+        videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy(); // Max anisotropy for best quality
 
         // Flip horizontally and vertically
         videoTexture.wrapS = THREE.RepeatWrapping;
@@ -189,6 +167,8 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
       // Add clock for animation timing
       const clock = new THREE.Clock();
       animate();
+
+      window.camera = camera;
 
       if (setLoading) setLoading(false);
     });
