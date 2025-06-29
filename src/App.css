@@ -5,3 +5,46 @@
 
 }
 
+/* Loading css */
+
+.loading-container {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(22, 22, 22); /* or transparent if you prefer */
+  z-index: 9999;
+}
+
+.loading-text {
+  font-size: 2rem;
+  font-weight: 50;
+  color: #ededed;
+  font-family: "Jersey 10", sans-serif;
+
+}
+
+.dot {
+  opacity: 0;
+  animation: blink 1.4s infinite both;
+}
+
+.dot.one {
+  animation-delay: 0s;
+}
+.dot.two {
+  animation-delay: 0.2s;
+}
+.dot.three {
+  animation-delay: 0.4s;
+}
+
+@keyframes blink {
+  0%, 80%, 100% { opacity: 0; }
+  40% { opacity: 1; }
+}
+

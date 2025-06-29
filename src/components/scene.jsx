@@ -1,7 +1,8 @@
 import { useBaseScene } from '../hooks/useBaseScene';
 
-function Scene() {
-  useBaseScene({ cameraIndex: 0 }, { orbitPoint: "Gpencil" });
+function Scene({ setLoading }) {
+  useBaseScene({ cameraIndex: 0 }, { orbitPoint: "Gpencil", setLoading });
+  return null;
 }
 
 export default Scene;

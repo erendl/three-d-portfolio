@@ -4,7 +4,7 @@ import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
-export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
+export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoading}) {
   const mousePosition = useRef({ x: 0, y: 0 });
   
   useEffect(() => {
@@ -155,6 +155,8 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       // Add clock for animation timing
       const clock = new THREE.Clock();
       animate();
+
+      if (setLoading) setLoading(false);
     });
 
     return () => {
