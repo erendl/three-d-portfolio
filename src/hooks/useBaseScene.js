@@ -67,7 +67,7 @@ export function useBaseScene({cameraIndex = 0}, {setLoading}) {
       
       const initialRotation = camera.rotation.clone();
       
-      controls.rotateSpeed = 0.4;
+      controls.rotateSpeed = 0.1;
       controls.zoomSpeed = 0.1;
       controls.panSpeed = 0.4;
       controls.enableDamping = true
