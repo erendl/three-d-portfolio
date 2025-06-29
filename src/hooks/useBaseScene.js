@@ -68,7 +68,7 @@ export function useBaseScene({cameraIndex = 0}, {setLoading}) {
       const initialRotation = camera.rotation.clone();
       
       controls.rotateSpeed = 0.1;
-      controls.zoomSpeed = 0.1;
+      controls.zoomSpeed = 0.6;
       controls.panSpeed = 0.4;
       controls.enableDamping = true
       console.log(controls.target,"controls target")
@@ -150,6 +150,44 @@ export function useBaseScene({cameraIndex = 0}, {setLoading}) {
         tvScreen.material = new THREE.MeshBasicMaterial({ map: videoTexture });
       }
       // --- END VIDEO TEXTURE ---
+
+      // --- 2nd Video Texture for TV-SCREEN ---
+
+      // Find the mesh named 'tv-screen'
+      const tvsecond = gltf.scene.getObjectByName('tv-second');
+      if (tvsecond) {
+        // Create a video element
+        const video = document.createElement('video');
+        video.src = '/assets/images/atariVideo.mp4';
+        video.crossOrigin = 'anonymous';
+        video.loop = true;
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.style.display = 'none';
+        document.body.appendChild(video);
+        // Start playing (required for some browsers)
+        video.play();
+
+        // Create a THREE video texture
+        const videoTexture = new THREE.VideoTexture(video);
+        videoTexture.minFilter = THREE.LinearMipMapLinearFilter; // Use mipmaps for smoother scaling
+        videoTexture.magFilter = THREE.LinearFilter;
+        videoTexture.format = THREE.RGBAFormat;
+        videoTexture.generateMipmaps = true;
+        videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy(); // Max anisotropy for best quality
+
+        // Flip horizontally and vertically
+        videoTexture.wrapS = THREE.RepeatWrapping;
+        videoTexture.wrapT = THREE.RepeatWrapping;
+        videoTexture.repeat.set(1, -1); // flip X and Y
+        videoTexture.center.set(0.5, 0.5); // flip around center
+
+        // Replace the material of the mesh
+        tvsecond.material = new THREE.MeshBasicMaterial({ map: videoTexture });
+      }
+      // --- END VIDEO TEXTURE ---
+
 
       function animate() {
         requestAnimationFrame(animate);
