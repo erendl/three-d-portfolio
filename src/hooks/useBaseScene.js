@@ -65,7 +65,7 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       controls.panSpeed = 0.04;
 
       // Create About Me label
-      const aboutDiv = document.createElement('div');
+/*       const aboutDiv = document.createElement('div');
       aboutDiv.className = 'label';
       // Animated text setup
       const aboutText = 'About Me';
@@ -79,7 +79,7 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       aboutDiv.style.whiteSpace = 'nowrap';
       const aboutLabel = new CSS2DObject(aboutDiv);
       aboutLabel.position.set(-9, -2, -4); // Adjust position as needed
-      scene.add(aboutLabel);
+      scene.add(aboutLabel); */
 
       // Animate text letter by letter for About Me
       let letterIndex = 0;
@@ -97,7 +97,7 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil"}) {
       // Create second label for Eren's intro
       const erenDiv = document.createElement('div');
       erenDiv.className = 'label';
-      const erenText = "\nI'm eren!\ni code,\ni design,\ni build things\n(hopefully) makes sense_";
+      const erenText = "\nlorem ipsum dolor\nsit amet\nconsectetur adipisicing\nelit. Quisquam, quos.";
       erenDiv.textContent = '';
       erenDiv.style.padding = '8px 16px';
       erenDiv.style.color = 'rgb(0, 0, 0)';
