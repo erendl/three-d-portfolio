@@ -11,8 +11,9 @@ function App() {
   return (
     <>
       {loading && <Loading />}
-      <Scene setLoading={setLoading} />
       <Navbar />
+      <Scene setLoading={setLoading} />
+
     </>
   );
 }

@@ -139,6 +139,40 @@ export function useBaseScene({cameraIndex = 0}, {orbitPoint = "Gpencil", setLoad
       // Start Eren's intro animation first
       revealErenNextLetter();
 
+      // --- VIDEO TEXTURE FOR TV-SCREEN ---
+      // Find the mesh named 'tv-screen'
+      const tvScreen = gltf.scene.getObjectByName('tv-screen');
+      if (tvScreen) {
+        // Create a video element
+        const video = document.createElement('video');
+        video.src = '/assets/images/terminalVideo.mp4';
+        video.crossOrigin = 'anonymous';
+        video.loop = true;
+        video.muted = true;
+        video.autoplay = true;
+        video.playsInline = true;
+        video.style.display = 'none';
+        document.body.appendChild(video);
+        // Start playing (required for some browsers)
+        video.play();
+
+        // Create a THREE video texture
+        const videoTexture = new THREE.VideoTexture(video);
+        videoTexture.minFilter = THREE.LinearFilter;
+        videoTexture.magFilter = THREE.LinearFilter;
+        videoTexture.format = THREE.RGBAFormat;
+
+        // Flip horizontally and vertically
+        videoTexture.wrapS = THREE.RepeatWrapping;
+        videoTexture.wrapT = THREE.RepeatWrapping;
+        videoTexture.repeat.set(1, -1); // flip X and Y
+        videoTexture.center.set(0.5, 0.5); // flip around center
+
+        // Replace the material of the mesh
+        tvScreen.material = new THREE.MeshBasicMaterial({ map: videoTexture });
+      }
+      // --- END VIDEO TEXTURE ---
+
       function animate() {
         requestAnimationFrame(animate);
         controls.update();
