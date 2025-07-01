@@ -67,7 +67,7 @@ function SceneTwo({ setLoading }) {
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
-        
+        window.camera = camera;
 
         // initialRotation
         const initialRotation = camera.rotation.clone();
@@ -78,9 +78,9 @@ function SceneTwo({ setLoading }) {
             // Mouse Position Camera Rotation
             camera.rotation.x = initialRotation.x + mousePosition.current.y * 0.01;
             camera.rotation.y = initialRotation.y + mousePosition.current.x * -0.01;
-            camera.position.x = initialPosition.x - mousePosition.current.y * 0.5;
-            camera.position.y = initialPosition.y + mousePosition.current.x * -0.05;
-            camera.position.z = initialPosition.z + scrollDelta.current / 30;
+            camera.position.x = initialPosition.x + 1.2 + mousePosition.current.y * 0.5;
+            camera.position.y = initialPosition.y + 0.1 + mousePosition.current.x * -0.05;
+            /* camera.position.z = initialPosition.z + scrollDelta.current / 30; */
             
             // Update animation mixer
             if (mixer) {
