@@ -78,42 +78,42 @@ export function useBaseScene({cameraIndex = 0}, {setLoading}) {
 
 
       // Create label for intro
-      const erenDiv = document.createElement('div');
-      erenDiv.className = 'label';
-      const erenText = "\nlorem ipsum dolor\nsit amet\nconsectetur adipisicing\nelit. Quisquam, quos.";
-      erenDiv.textContent = '';
-      erenDiv.style.padding = '8px 16px';
-      erenDiv.style.color = 'rgb(0, 0, 0)';
-      erenDiv.style.borderRadius = '8px';
-      erenDiv.style.fontSize = '1.1rem';
-      erenDiv.style.backgroundColor = 'none';
-      erenDiv.style.fontFamily = 'monospace';
-      erenDiv.style.whiteSpace = 'pre';
-      erenDiv.style.backgroundImage = 'url(/assets/images/terminal.png)';
-      erenDiv.style.backgroundSize = 'cover';
-      erenDiv.style.backgroundPosition = 'center';
-      erenDiv.style.backgroundOpacity = '0.5';
-      erenDiv.style.width = '320px'; // Fixed width
-      erenDiv.style.height = '240px'; // Fixed height
-      erenDiv.style.display = 'flex';
-      erenDiv.style.alignItems = 'center';
-      erenDiv.style.justifyContent = 'center';
-      erenDiv.style.overflow = 'hidden';
-      const erenLabel = new CSS2DObject(erenDiv);
-      erenLabel.position.set(0, -2, 0); // Position below About Me
-      scene.add(erenLabel);
+      const terminalDiv = document.createElement('div');
+      terminalDiv.className = 'label';
+      const terminalText = "\nfeel free to\nswipe\nzoom in \nzoom out...";
+      terminalDiv.textContent = '';
+      terminalDiv.style.padding = '8px 16px';
+      terminalDiv.style.color = 'rgb(0, 0, 0)';
+      terminalDiv.style.borderRadius = '8px';
+      terminalDiv.style.fontSize = '1.1rem';
+      terminalDiv.style.backgroundColor = 'none';
+      terminalDiv.style.fontFamily = 'monospace';
+      terminalDiv.style.whiteSpace = 'pre';
+      terminalDiv.style.backgroundImage = 'url(/assets/images/terminal.png)';
+      terminalDiv.style.backgroundSize = 'cover';
+      terminalDiv.style.backgroundPosition = 'center';
+      terminalDiv.style.backgroundOpacity = '0.5';
+      terminalDiv.style.width = '320px'; // Fixed width
+      terminalDiv.style.height = '240px'; // Fixed height
+      terminalDiv.style.display = 'flex';
+      terminalDiv.style.alignItems = 'center';
+      terminalDiv.style.justifyContent = 'center';
+      terminalDiv.style.overflow = 'hidden';
+      const terminalLabel = new CSS2DObject(terminalDiv);
+      terminalLabel.position.set(0, -2, 0); // Position below About Me
+      scene.add(terminalLabel);
 
       // Animate text letter by letter for intro
-      let erenLetterIndex = 0;
-      function revealErenNextLetter() {
-        if (erenLetterIndex <= erenText.length) {
-          erenDiv.textContent = erenText.slice(0, erenLetterIndex);
-          erenLetterIndex++;
-          setTimeout(revealErenNextLetter, 40); // Faster speed for effect
+      let terminalLetterIndex = 0;
+      function revealTerminalNextLetter() {
+        if (terminalLetterIndex <= terminalText.length) {
+          terminalDiv.textContent = terminalText.slice(0, terminalLetterIndex);
+          terminalLetterIndex++;
+          setTimeout(revealTerminalNextLetter, 40); // Faster speed for effect
         }
       }
-      // Start Eren's intro animation first
-      revealErenNextLetter();
+      // Start intro animation first
+      revealTerminalNextLetter();
 
       // --- VIDEO TEXTURE FOR TV-SCREEN ---
       // Find the mesh named 'tv-screen'
@@ -158,7 +158,7 @@ export function useBaseScene({cameraIndex = 0}, {setLoading}) {
       if (tvsecond) {
         // Create a video element
         const video = document.createElement('video');
-        video.src = '/assets/images/atariVideo.mp4';
+        video.src = '/assets/images/terminalVideo.mp4';
         video.crossOrigin = 'anonymous';
         video.loop = true;
         video.muted = true;
