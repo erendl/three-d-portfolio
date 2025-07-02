@@ -78,7 +78,7 @@ function SceneTwo({ setLoading }) {
         camera.rotation.set(1.5708013445146851, -1.5533431252620336, 1.5708013445146851);
         controls.target.set(1.200, -0.743, -4.627);
 
-        controls.rotateSpeed = 0.01;
+        controls.rotateSpeed = 0.00001;
         controls.zoomSpeed = 0.2;
         controls.panSpeed = 0.6;
         controls.enableDamping = true;
@@ -103,7 +103,12 @@ function SceneTwo({ setLoading }) {
             }
             // Camera position limit    
             camera.position.z = Math.max(-5, Math.min(camera.position.z, 5.5));
-            camera.position.y = Math.max(-1, Math.min(camera.position.y, -0.5));
+            camera.position.y = Math.max(-0.8, Math.min(camera.position.y, -0.6));
+            camera.rotation.x = Math.max(1.58, Math.min(camera.rotation.x, 1.57));
+            camera.rotation.y = Math.max(-1.56, Math.min(camera.rotation.y, -1.55));
+            camera.rotation.z = Math.max(1.58, Math.min(camera.rotation.z, 1.57));
+
+        
             renderer.render(scene, camera);
           }
 
