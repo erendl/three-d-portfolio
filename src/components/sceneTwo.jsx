@@ -3,6 +3,8 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
+import gsap from 'gsap';
+import { max } from 'three/src/nodes/TSL.js';
 
 function SceneTwo({ setLoading }) {
     const mousePosition = useRef({ x: 0, y: 0 });
@@ -72,22 +74,25 @@ function SceneTwo({ setLoading }) {
         // OrbitControls setup
         const controls = new OrbitControls(camera, renderer.domElement);
         window.controls = controls;
+        camera.position.set(-4.633936405181885, -0.800000011920929, 5.5);
         camera.rotation.set(1.5708013445146851, -1.5533431252620336, 1.5708013445146851);
-        camera.position.set(-6.633936405181885, -0.800000011920929, -4.547184467315674);
         controls.target.set(1.200, -0.743, -4.627);
-        controls.rotateSpeed = 0.1;
-        controls.zoomSpeed = 0.6;
-        controls.panSpeed = 0.4;
+
+        controls.rotateSpeed = 0.01;
+        controls.zoomSpeed = 0.2;
+        controls.panSpeed = 0.6;
         controls.enableDamping = true;
+        controls.mouseButtons.LEFT = THREE.MOUSE.PAN;
+        controls.mouseButtons.RIGHT = THREE.MOUSE.ROTATE;
+        controls.enableRotate = false;
+        controls.touches.ONE = THREE.TOUCH.PAN;
         console.log(controls.target, "controls target");
 /*         if (window.innerWidth <= 768) {
           camera.position.set(3.83, 3, 6);
         } */
 
-        // initialRotation
-        const initialRotation = camera.rotation.clone();
-        const initialPosition = camera.position.clone();
-        const initialTarget = controls.target.clone();
+        // GSAP easing effect
+        gsap.to(camera.position, { x: -6.633936405181885, y: -0.800000011920929, z: -4.547184467315674, duration: 4, ease: 'power2.inOut' });
 
         function animate() {
             requestAnimationFrame(animate);
@@ -96,6 +101,9 @@ function SceneTwo({ setLoading }) {
               const delta = clock.getDelta();
               mixer.update(delta);
             }
+            // Camera position limit    
+            camera.position.z = Math.max(-5, Math.min(camera.position.z, 5.5));
+            camera.position.y = Math.max(-1, Math.min(camera.position.y, -0.5));
             renderer.render(scene, camera);
           }
 
