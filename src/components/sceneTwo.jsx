@@ -63,26 +63,35 @@ function SceneTwo({ setLoading }) {
         }
 
         // Camera setup
-        camera = gltf.cameras[0];
+        camera = new THREE.PerspectiveCamera(22.9, window.innerWidth / window.innerHeight, 0.1, 1000);
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
         window.camera = camera;
+        
+        // OrbitControls setup
+        const controls = new OrbitControls(camera, renderer.domElement);
+        window.controls = controls;
+        camera.rotation.set(1.5708013445146851, -1.5533431252620336, 1.5708013445146851);
+        camera.position.set(-6.633936405181885, -0.800000011920929, -4.547184467315674);
+        controls.target.set(1.200, -0.743, -4.627);
+        controls.rotateSpeed = 0.1;
+        controls.zoomSpeed = 0.6;
+        controls.panSpeed = 0.4;
+        controls.enableDamping = true;
+        console.log(controls.target, "controls target");
+/*         if (window.innerWidth <= 768) {
+          camera.position.set(3.83, 3, 6);
+        } */
 
         // initialRotation
         const initialRotation = camera.rotation.clone();
         const initialPosition = camera.position.clone();
+        const initialTarget = controls.target.clone();
 
         function animate() {
             requestAnimationFrame(animate);
-            // Mouse Position Camera Rotation
-            camera.rotation.x = initialRotation.x + mousePosition.current.y * 0.01;
-            camera.rotation.y = initialRotation.y + mousePosition.current.x * -0.01;
-            camera.position.x = initialPosition.x + 1.2 + mousePosition.current.y * 0.5;
-            camera.position.y = initialPosition.y + 0.1 + mousePosition.current.x * -0.05;
-            /* camera.position.z = initialPosition.z + scrollDelta.current / 30; */
-            
-            // Update animation mixer
+ 
             if (mixer) {
               const delta = clock.getDelta();
               mixer.update(delta);
@@ -97,6 +106,10 @@ function SceneTwo({ setLoading }) {
           window.removeEventListener('mousemove', handleMouseMove);
           window.removeEventListener('wheel', handleWheel);
           document.body.removeChild(renderer.domElement);
+
+          console.log(camera.position, "camera position");
+          console.log(controls.target, "controls target");
+          console.log(camera.rotation, "camera rotation");
         };
       });
     }, []);
