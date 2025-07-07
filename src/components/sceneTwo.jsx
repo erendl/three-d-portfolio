@@ -14,6 +14,7 @@ function SceneTwo({ setLoading }) {
       // THREE.js scene 
       const scene = new THREE.Scene();
       const renderer = new THREE.WebGLRenderer({ antialias: true });
+      renderer.setPixelRatio(window.devicePixelRatio);
       renderer.setSize(window.innerWidth, window.innerHeight);
       document.body.appendChild(renderer.domElement);
       const loader = new GLTFLoader();
@@ -46,7 +47,7 @@ function SceneTwo({ setLoading }) {
         }
 
         // Camera setup
-        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 1000);
+        camera = new THREE.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.01, 5000);
         camera.aspect = window.innerWidth / window.innerHeight;
         camera.updateProjectionMatrix();
         renderer.setSize(window.innerWidth, window.innerHeight);
