@@ -54,6 +54,32 @@ function SceneTwo({ setLoading }) {
         }
       }
 
+      // Mobil için dokunma event'i
+      // Touch event for mobile
+      function onTouch(event) {
+        if (event.touches.length === 1) {
+          const touch = event.touches[0];
+          mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+          mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+          raycaster.setFromCamera(mouse, camera);
+          let opened = false;
+          if (githubMesh) {
+            const intersects = raycaster.intersectObject(githubMesh, true);
+            if (intersects.length > 0) {
+              window.open('https://github.com/erendl', '_blank');
+              opened = true;
+            }
+          }
+          if (!opened && linkedinMesh) {
+            const intersects = raycaster.intersectObject(linkedinMesh, true);
+            if (intersects.length > 0) {
+              window.open('https://www.linkedin.com/in/erenozdil/', '_blank');
+            }
+          }
+          event.preventDefault();
+        }
+      }
+
       loader.load('/assets/models/scenetwo.glb', (gltf) => {
         scene.add(gltf.scene);
 
@@ -109,10 +135,12 @@ function SceneTwo({ setLoading }) {
           if (setLoading) setLoading(false);
           // Add event listener for click
           window.addEventListener('click', onClick);
+          renderer.domElement.addEventListener('touchstart', onTouch, { passive: false });
         return () => {
           window.removeEventListener('mousemove', handleMouseMove);
           window.removeEventListener('wheel', handleWheel);
           window.removeEventListener('click', onClick);
+          renderer.domElement.removeEventListener('touchstart', onTouch);
           document.body.removeChild(renderer.domElement);
 
           console.log(camera.position, "camera position");

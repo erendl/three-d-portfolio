@@ -138,17 +138,16 @@ function Scene({ setLoading, setActiveScene }) {
       terminalDiv.style.backgroundSize = 'cover';
       terminalDiv.style.backgroundPosition = 'center';
       terminalDiv.style.backgroundOpacity = '0.5';
-      terminalDiv.style.width = '320px'; // Fixed width
-      terminalDiv.style.height = '240px'; // Fixed height
+      terminalDiv.style.width = '320px'; 
       terminalDiv.style.display = 'flex';
       terminalDiv.style.alignItems = 'center';
       terminalDiv.style.justifyContent = 'center';
       terminalDiv.style.overflow = 'hidden';
       const terminalLabel = new CSS2DObject(terminalDiv);
-      terminalLabel.position.set(0, -2, 0); // Position below About Me
+      terminalLabel.position.set(0, -2, 0); 
       scene.add(terminalLabel);
 
-      // Animate text letter by letter for intro
+      // Animate text letter 
       let terminalLetterIndex = 0;
       function revealTerminalNextLetter() {
         if (terminalLetterIndex <= terminalText.length) {
