@@ -105,19 +105,16 @@ function Scene({ setLoading, setActiveScene }) {
       camera.updateProjectionMatrix();
       renderer.setSize(window.innerWidth, window.innerHeight);
       labelRenderer.setSize(window.innerWidth, window.innerHeight);
-      console.log(camera.position, "camera position");
 
       // OrbitControls setup
       const controls = new OrbitControls(camera, renderer.domElement);
       camera.rotation.set(-0.4314569990246626, 0.5350401718310553, 0.28675455599246913);
       camera.position.set(2.522228232880101, 2.426328964614322, 3.9387430148330766);
-      console.log(camera.rotation, "camera rotation");
       const initialRotation = camera.rotation.clone();
       controls.rotateSpeed = 0.1;
       controls.zoomSpeed = 0.6;
       controls.panSpeed = 0.4;
       controls.enableDamping = true;
-      console.log(controls.target, "controls target");
       if (window.innerWidth <= 768) {
         camera.position.set(3.83, 3, 6);
       }
@@ -221,7 +218,7 @@ function Scene({ setLoading, setActiveScene }) {
       // --- END VIDEO TEXTURE ---
 
       aboutMeMeshRef.current = gltf.scene.getObjectByName('aboutMe');
-      console.log('aboutMeMesh:', aboutMeMeshRef.current);
+  
 
 
 

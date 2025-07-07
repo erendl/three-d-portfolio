@@ -56,7 +56,6 @@ function SceneTwo({ setLoading }) {
 
       // Touch event for mobile
       function onTouch(event) {
-        console.log('TOUCH EVENT', event);
         if (event.touches.length === 1) {
           const touch = event.touches[0];
           mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
@@ -65,7 +64,6 @@ function SceneTwo({ setLoading }) {
           let opened = false;
           if (githubMesh) {
             const intersects = raycaster.intersectObject(githubMesh, true);
-            console.log('githubMesh intersects:', intersects);
             if (intersects.length > 0) {
               window.location.href = 'https://github.com/erendl';
               opened = true;
@@ -73,7 +71,6 @@ function SceneTwo({ setLoading }) {
           }
           if (!opened && linkedinMesh) {
             const intersects = raycaster.intersectObject(linkedinMesh, true);
-            console.log('linkedinMesh intersects:', intersects);
             if (intersects.length > 0) {
               window.location.href = 'https://www.linkedin.com/in/erenozdil/';
             }
@@ -144,10 +141,6 @@ function SceneTwo({ setLoading }) {
           window.removeEventListener('click', onClick);
           renderer.domElement.removeEventListener('touchstart', onTouch);
           document.body.removeChild(renderer.domElement);
-
-          console.log(camera.position, "camera position");
-          console.log(controls.target, "controls target");
-          console.log(camera.rotation, "camera rotation");
         };
       });
     }, []);

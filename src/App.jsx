@@ -5,15 +5,19 @@ import Loading from './components/loading'
 import Navbar from './components/navbar'
 import SceneTwo from './components/sceneTwo'
 
-
 function App() {
   const [loading, setLoading] = useState(true);
   const [activeScene, setActiveScene] = useState('scene');
 
+  const handleSetActiveScene = (sceneName) => {
+    setLoading(true);
+    setActiveScene(sceneName);
+  };
+
   return (
     <>
       {loading && <Loading />}
-      {activeScene === 'scene' && <Scene setLoading={setLoading} setActiveScene={setActiveScene} />}
+      {activeScene === 'scene' && <Scene setLoading={setLoading} setActiveScene={handleSetActiveScene} />}
       {activeScene === 'sceneTwo' && <SceneTwo setLoading={setLoading} />}
     </>
   );
