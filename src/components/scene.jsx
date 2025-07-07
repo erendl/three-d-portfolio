@@ -58,6 +58,28 @@ function Scene({ setLoading, setActiveScene }) {
       }
     }
 
+    // touch event
+    function onTouch(event) {
+      if (event.touches.length === 1) {
+        const touch = event.touches[0];
+        mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        const aboutMeMesh = aboutMeMeshRef.current;
+        if (aboutMeMesh) {
+          let intersectMeshes = [aboutMeMesh];
+          if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
+            intersectMeshes = aboutMeMesh.children;
+          }
+          const intersects = raycaster.intersectObjects(intersectMeshes, true);
+          if (intersects.length > 0) {
+            if (setActiveScene) setActiveScene('sceneTwo');
+          }
+        }
+        event.preventDefault();
+      }
+    }
+
     // Load GLTF model
     loader.load('/assets/models/scene_editor.glb', (gltf) => {
       scene.add(gltf.scene);
@@ -204,6 +226,7 @@ function Scene({ setLoading, setActiveScene }) {
 
 
       renderer.domElement.addEventListener('click', onClick);
+      renderer.domElement.addEventListener('touchstart', onTouch, { passive: false });
 
       // Animation loop
       function animate() {
@@ -233,6 +256,7 @@ function Scene({ setLoading, setActiveScene }) {
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
       renderer.domElement.removeEventListener('click', onClick);
+      renderer.domElement.removeEventListener('touchstart', onTouch);
       document.body.removeChild(renderer.domElement);
       document.body.removeChild(labelRenderer.domElement);
     };
