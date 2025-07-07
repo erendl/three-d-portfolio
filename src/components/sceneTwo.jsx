@@ -19,6 +19,10 @@ function SceneTwo({ setLoading }) {
       document.body.appendChild(renderer.domElement);
       const loader = new GLTFLoader();
       let camera;
+      let githubMesh = null; // To store the GitHub mesh
+      let linkedinMesh = null; // To store the LinkedIn mesh
+      const raycaster = new THREE.Raycaster();
+      const mouse = new THREE.Vector2();
   
       // EnvMap
       new RGBELoader()
@@ -29,8 +33,34 @@ function SceneTwo({ setLoading }) {
           scene.background = texture;
         });
 
+      // Click handler
+      function onClick(event) {
+        // Normalize mouse coordinates (-1 to +1)
+        mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+        mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+        raycaster.setFromCamera(mouse, camera);
+        let opened = false;
+        if (githubMesh) {
+          const intersects = raycaster.intersectObject(githubMesh, true);
+          if (intersects.length > 0) {
+            window.open('https://github.com/erendl', '_blank');
+            opened = true;
+          }
+        }
+        if (!opened && linkedinMesh) {
+          const intersects = raycaster.intersectObject(linkedinMesh, true);
+          if (intersects.length > 0) {
+            window.open('https://www.linkedin.com/in/erenozdil/', '_blank');
+          }
+        }
+      }
+
       loader.load('/assets/models/scenetwo.glb', (gltf) => {
         scene.add(gltf.scene);
+
+        // Find the GitHub and LinkedIn meshes by name
+        githubMesh = gltf.scene.getObjectByName('GitHub');
+        linkedinMesh = gltf.scene.getObjectByName('LinkedIn');
 
         // Animation mixer setup
         let mixer = null;
@@ -78,9 +108,12 @@ function SceneTwo({ setLoading }) {
           const clock = new THREE.Clock();
           animate();
           if (setLoading) setLoading(false);
+          // Add event listener for click
+          window.addEventListener('click', onClick);
         return () => {
           window.removeEventListener('mousemove', handleMouseMove);
           window.removeEventListener('wheel', handleWheel);
+          window.removeEventListener('click', onClick);
           document.body.removeChild(renderer.domElement);
 
           console.log(camera.position, "camera position");
