@@ -5,17 +5,23 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRenderer';
 
 
-function Scene({ setLoading }) {
+function Scene({ setLoading, setActiveScene }) {
   const mousePosition = useRef({ x: 0, y: 0 });
+  const aboutMeMeshRef = useRef(null);
 
   useEffect(() => {
     // THREE.js scene 
     const scene = new THREE.Scene();
     const renderer = new THREE.WebGLRenderer({ antialias: true });
+    renderer.setPixelRatio(window.devicePixelRatio);
     renderer.setSize(window.innerWidth, window.innerHeight);
     document.body.appendChild(renderer.domElement);
     const loader = new GLTFLoader();
     let camera;
+
+    // Raycaster variables
+    const raycaster = new THREE.Raycaster();
+    const mouse = new THREE.Vector2();
 
     // Mouse event listener 
     const handleMouseMove = (event) => {
@@ -34,6 +40,27 @@ function Scene({ setLoading }) {
     labelRenderer.domElement.style.pointerEvents = 'none';
     document.body.appendChild(labelRenderer.domElement);
 
+    // onClick function
+    function onClick(event) {
+      console.log('TIKLAMA OLDU', event);
+      mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
+      mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
+      raycaster.setFromCamera(mouse, camera);
+      const aboutMeMesh = aboutMeMeshRef.current;
+      if (aboutMeMesh) {
+        let intersectMeshes = [aboutMeMesh];
+        if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
+          intersectMeshes = aboutMeMesh.children;
+        }
+        const intersects = raycaster.intersectObjects(intersectMeshes, true);
+        console.log('aboutMe intersects:', intersects);
+        if (intersects.length > 0) {
+          console.log('Intersected mesh:', intersects[0].object);
+          if (setActiveScene) setActiveScene('sceneTwo');
+        }
+      }
+    }
+
     // Load GLTF model
     loader.load('/assets/models/scene_editor.glb', (gltf) => {
       scene.add(gltf.scene);
@@ -49,6 +76,10 @@ function Scene({ setLoading }) {
 
       // Camera setup
       camera = gltf.cameras[0];
+      if (camera && camera.isPerspectiveCamera) {
+        camera.far = 5000;
+        camera.updateProjectionMatrix();
+      }
       camera.aspect = window.innerWidth / window.innerHeight;
       camera.rotation.set(-0.4314569990246626, 0.5350401718310553, 0.28675455599246913);
       camera.position.set(2.522228232880101, 2.426328964614322, 3.9387430148330766);
@@ -72,7 +103,7 @@ function Scene({ setLoading }) {
         camera.position.set(3.83, 3, 6);
       }
 
-      // Create label for intro (terminal style)
+      //label for terminal
       const terminalDiv = document.createElement('div');
       terminalDiv.className = 'label';
       const terminalText = "\nfeel free to\nswipe\nzoom in \nzoom out...";
@@ -104,17 +135,15 @@ function Scene({ setLoading }) {
         if (terminalLetterIndex <= terminalText.length) {
           terminalDiv.textContent = terminalText.slice(0, terminalLetterIndex);
           terminalLetterIndex++;
-          setTimeout(revealTerminalNextLetter, 40); // Faster speed for effect
+          setTimeout(revealTerminalNextLetter, 40); 
         }
       }
-      // Start intro animation first
+      // Start intro animation
       revealTerminalNextLetter();
 
-      // --- VIDEO TEXTURE FOR TV-SCREEN ---
-      // Video texture setup for first TV screen
+      // video texture setup 1st
       const tvScreen = gltf.scene.getObjectByName('tv-screen');
       if (tvScreen) {
-        // Create a video element
         const video = document.createElement('video');
         video.src = '/assets/images/terminalVideo.mp4';
         video.crossOrigin = 'anonymous';
@@ -124,35 +153,27 @@ function Scene({ setLoading }) {
         video.playsInline = true;
         video.style.display = 'none';
         document.body.appendChild(video);
-        // Start playing (required for some browsers)
         video.play();
 
-        // Create a THREE video texture
+        //three vid texture
         const videoTexture = new THREE.VideoTexture(video);
-        videoTexture.minFilter = THREE.LinearMipMapLinearFilter; // Use mipmaps for smoother scaling
+        videoTexture.minFilter = THREE.LinearMipMapLinearFilter; 
         videoTexture.magFilter = THREE.LinearFilter;
         videoTexture.format = THREE.RGBAFormat;
         videoTexture.generateMipmaps = true;
         videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy();
-         // Max anisotropy for best
-        //  quality
-
-        // Flip horizontally and vertically
         videoTexture.wrapS = THREE.RepeatWrapping;
         videoTexture.wrapT = THREE.RepeatWrapping;
-        videoTexture.repeat.set(1, -1); // flip X and Y
-        videoTexture.center.set(0.5, 0.5); // flip around center
-
-        // Replace the material of the mesh
+        videoTexture.repeat.set(1, -1);
+        videoTexture.center.set(0.5, 0.5);
         tvScreen.material = new THREE.MeshBasicMaterial({ map: videoTexture });
       }
       // --- END VIDEO TEXTURE ---
 
-      // --- 2nd Video Texture for TV-SCREEN ---
-      // Video texture setup for second TV screen
+
+      // Video texture setup 2nd
       const tvsecond = gltf.scene.getObjectByName('tv-second');
       if (tvsecond) {
-        // Create a video element
         const video = document.createElement('video');
         video.src = '/assets/images/atariVideo.mp4';
         video.crossOrigin = 'anonymous';
@@ -162,27 +183,33 @@ function Scene({ setLoading }) {
         video.playsInline = true;
         video.style.display = 'none';
         document.body.appendChild(video);
-        // Start playing (required for some browsers)
         video.play();
 
-        // Create a THREE video texture
+        // THREE video texture
         const videoTexture = new THREE.VideoTexture(video);
         videoTexture.minFilter = THREE.LinearMipMapLinearFilter; // Use mipmaps for smoother scaling
         videoTexture.magFilter = THREE.LinearFilter;
         videoTexture.format = THREE.RGBAFormat;
         videoTexture.generateMipmaps = true;
-        videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy(); // Max anisotropy for best quality
-
-        // Flip horizontally and vertically
+        videoTexture.anisotropy = renderer.capabilities.getMaxAnisotropy(); 
         videoTexture.wrapS = THREE.RepeatWrapping;
         videoTexture.wrapT = THREE.RepeatWrapping;
-        videoTexture.repeat.set(1, -1); // flip X and Y
-        videoTexture.center.set(0.5, 0.5); // flip around center
+        videoTexture.repeat.set(1, -1);
+        videoTexture.center.set(0.5, 0.5);
 
-        // Replace the material of the mesh
         tvsecond.material = new THREE.MeshBasicMaterial({ map: videoTexture });
       }
       // --- END VIDEO TEXTURE ---
+
+      aboutMeMeshRef.current = gltf.scene.getObjectByName('aboutMe');
+      console.log('aboutMeMesh:', aboutMeMeshRef.current);
+
+      if (aboutMeMeshRef.current) {
+        const box = new THREE.BoxHelper(aboutMeMeshRef.current, 0xff0000);
+        scene.add(box);
+      }
+
+      renderer.domElement.addEventListener('click', onClick);
 
       // Animation loop
       function animate() {
@@ -198,19 +225,20 @@ function Scene({ setLoading }) {
         renderer.render(scene, camera);
         labelRenderer.render(scene, camera);
       }
-      // Add clock for animation timing
+      // animation timing
       const clock = new THREE.Clock();
       animate();
 
-      // Expose camera for debugging
+      //camera debugging
       window.camera = camera;
 
       if (setLoading) setLoading(false);
     });
 
-    // Cleanup on component unmount
+    // Cleanup
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      renderer.domElement.removeEventListener('click', onClick);
       document.body.removeChild(renderer.domElement);
       document.body.removeChild(labelRenderer.domElement);
     };

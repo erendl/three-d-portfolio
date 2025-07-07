@@ -3,8 +3,7 @@ import * as THREE from 'three';
 import { GLTFLoader } from 'three/examples/jsm/loaders/GLTFLoader';
 import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
-import gsap from 'gsap';
-import { max } from 'three/src/nodes/TSL.js';
+
 
 function SceneTwo({ setLoading }) {
     const mousePosition = useRef({ x: 0, y: 0 });

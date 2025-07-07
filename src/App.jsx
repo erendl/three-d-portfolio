@@ -8,12 +8,13 @@ import SceneTwo from './components/sceneTwo'
 
 function App() {
   const [loading, setLoading] = useState(true);
+  const [activeScene, setActiveScene] = useState('scene');
 
   return (
     <>
       {loading && <Loading />}
-      <SceneTwo setLoading={setLoading} />
-
+      {activeScene === 'scene' && <Scene setLoading={setLoading} setActiveScene={setActiveScene} />}
+      {activeScene === 'sceneTwo' && <SceneTwo setLoading={setLoading} />}
     </>
   );
 }
