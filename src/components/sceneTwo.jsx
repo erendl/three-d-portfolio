@@ -18,8 +18,9 @@ function SceneTwo({ setLoading }) {
       document.body.appendChild(renderer.domElement);
       const loader = new GLTFLoader();
       let camera;
-      let githubMesh = null; // To store the GitHub mesh
-      let linkedinMesh = null; // To store the LinkedIn mesh
+      let githubMesh = null; 
+      let linkedinMesh = null; 
+      let githubHitboxMesh = null;
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
   
@@ -32,15 +33,14 @@ function SceneTwo({ setLoading }) {
           scene.background = texture;
         });
 
-      // Click handler
+      // onClick function
       function onClick(event) {
-        // Normalize mouse coordinates (-1 to +1)
         mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
         let opened = false;
-        if (githubMesh) {
-          const intersects = raycaster.intersectObject(githubMesh, true);
+        if (githubHitboxMesh) {
+          const intersects = raycaster.intersectObject(githubHitboxMesh, true);
           if (intersects.length > 0) {
             window.open('https://github.com/erendl', '_blank');
             opened = true;
@@ -62,8 +62,8 @@ function SceneTwo({ setLoading }) {
           mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
           raycaster.setFromCamera(mouse, camera);
           let opened = false;
-          if (githubMesh) {
-            const intersects = raycaster.intersectObject(githubMesh, true);
+          if (githubHitboxMesh) {
+            const intersects = raycaster.intersectObject(githubHitboxMesh, true);
             if (intersects.length > 0) {
               window.location.href = 'https://github.com/erendl';
               opened = true;
@@ -85,6 +85,21 @@ function SceneTwo({ setLoading }) {
         // Find the GitHub and LinkedIn meshes by name
         githubMesh = gltf.scene.getObjectByName('GitHub');
         linkedinMesh = gltf.scene.getObjectByName('LinkedIn');
+
+        if (githubMesh) {
+          const box = new THREE.Box3().setFromObject(githubMesh);
+          const size = new THREE.Vector3();
+          box.getSize(size);
+          const scaleFactor = 1.2;
+          const helperGeometry = new THREE.BoxGeometry(size.x * scaleFactor, size.y * scaleFactor, size.z * scaleFactor);
+          const helperMaterial = new THREE.MeshBasicMaterial({ visible: false });
+          const hitboxMesh = new THREE.Mesh(helperGeometry, helperMaterial);
+          hitboxMesh.position.copy(githubMesh.position);
+          hitboxMesh.quaternion.copy(githubMesh.quaternion);
+          hitboxMesh.updateMatrixWorld();
+          scene.add(hitboxMesh);
+          githubHitboxMesh = hitboxMesh;
+        }
 
         // Animation mixer setup
         let mixer = null;
