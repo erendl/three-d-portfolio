@@ -42,7 +42,6 @@ function Scene({ setLoading, setActiveScene }) {
 
     // onClick function
     function onClick(event) {
-      console.log('TIKLAMA OLDU', event);
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, camera);
@@ -53,9 +52,7 @@ function Scene({ setLoading, setActiveScene }) {
           intersectMeshes = aboutMeMesh.children;
         }
         const intersects = raycaster.intersectObjects(intersectMeshes, true);
-        console.log('aboutMe intersects:', intersects);
         if (intersects.length > 0) {
-          console.log('Intersected mesh:', intersects[0].object);
           if (setActiveScene) setActiveScene('sceneTwo');
         }
       }
@@ -204,10 +201,7 @@ function Scene({ setLoading, setActiveScene }) {
       aboutMeMeshRef.current = gltf.scene.getObjectByName('aboutMe');
       console.log('aboutMeMesh:', aboutMeMeshRef.current);
 
-      if (aboutMeMeshRef.current) {
-        const box = new THREE.BoxHelper(aboutMeMeshRef.current, 0xff0000);
-        scene.add(box);
-      }
+
 
       renderer.domElement.addEventListener('click', onClick);
 
