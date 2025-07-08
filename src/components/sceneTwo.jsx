@@ -171,6 +171,9 @@ function SceneTwo({ setLoading, onContactClick }) {
         camera.rotation.set(-2.970708832007452, -0.006149622266331087, -3.1405314398888207);
         controls.target.set(-0.5233570373593516, 0.5518531521781637, 0.09849760556329873);
         controls.rotateSpeed = 0.3;
+        if (window.innerWidth <= 768) {
+          camera.position.set(-0.5256585328246953, 0.6154948028987944, -1.5);
+        }
 
 
         function animate() {
