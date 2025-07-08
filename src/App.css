@@ -102,6 +102,7 @@
   width: 100% !important;
   margin-top: 0.5rem;
   height: 2rem;
+  border-radius: 0rem;
 
 }
 .contact-form-overlay textarea {
@@ -112,6 +113,7 @@
   color: #ededed;
   font-family: "monospace", sans-serif;
   width: 100% !important;
+  border-radius: 0rem;
 }
 .contact-form-overlay button {
   background-color: #00000000;
