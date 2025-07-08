@@ -192,7 +192,6 @@ function SceneTwo({ setLoading, onContactClick }) {
           const clock = new THREE.Clock();
           animate();
           if (setLoading) setLoading(false);
-          // Add event listener for click
           window.addEventListener('click', onClick);
           renderer.domElement.addEventListener('touchstart', onTouch, { passive: false });
         return () => {
