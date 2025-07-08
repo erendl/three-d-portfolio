@@ -125,11 +125,14 @@ export default function ContactForm({ onClose }) {
             <button
               type="submit"
               className="block w-full rounded-md bg-indigo-600 px-3.5 py-2.5 text-center text-sm font-semibold text-white shadow-xs hover:bg-indigo-500 focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
-              disabled={sending}
+              disabled={sending || success === true}
             >
-              {sending ? 'Sending...' : "Let's talk"}
+              {sending
+                ? 'Sending...'
+                : success === true
+                  ? 'Message sent!'
+                  : "Let's talk"}
             </button>
-            {success === true && <div style={{ color: 'green', marginTop: 8 }}>Message sent!</div>}
             {success === false && <div style={{ color: 'red', marginTop: 8 }}>An error occurred.</div>}
           </div>
         </form>
