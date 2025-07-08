@@ -81,6 +81,14 @@ function SceneTwo({ setLoading, onContactClick }) {
             const intersects = raycaster.intersectObject(linkedinMesh, true);
             if (intersects.length > 0) {
               window.location.href = 'https://www.linkedin.com/in/erenozdil/';
+              opened = true;
+            }
+          }
+          if (!opened && contactMeMesh && onContactClick) {
+            const intersects = raycaster.intersectObject(contactMeMesh, true);
+            if (intersects.length > 0) {
+              onContactClick();
+              opened = true;
             }
           }
           event.preventDefault();
@@ -90,24 +98,48 @@ function SceneTwo({ setLoading, onContactClick }) {
       loader.load('/assets/models/scenetwo.glb', (gltf) => {
         scene.add(gltf.scene);
 
-        // Find the GitHub and LinkedIn meshes by name
+        //meshes for hitboxes
         githubMesh = gltf.scene.getObjectByName('GitHub');
         linkedinMesh = gltf.scene.getObjectByName('LinkedIn');
         contactMeMesh = gltf.scene.getObjectByName('ContactMe');
 
+        
+        // github hitbox
         if (githubMesh) {
-          const box = new THREE.Box3().setFromObject(githubMesh);
-          const size = new THREE.Vector3();
-          box.getSize(size);
-          const scaleFactor = 1.2;
-          const helperGeometry = new THREE.BoxGeometry(size.x * scaleFactor, size.y * scaleFactor, size.z * scaleFactor);
-          const helperMaterial = new THREE.MeshBasicMaterial({ visible: false });
-          const hitboxMesh = new THREE.Mesh(helperGeometry, helperMaterial);
-          hitboxMesh.position.copy(githubMesh.position);
-          hitboxMesh.quaternion.copy(githubMesh.quaternion);
-          hitboxMesh.updateMatrixWorld();
-          scene.add(hitboxMesh);
-          githubHitboxMesh = hitboxMesh;
+          const githubBox = new THREE.Box3().setFromObject(githubMesh);
+          const githubSize = new THREE.Vector3();
+          githubBox.getSize(githubSize);
+          const githubScaleFactor = 1.2;
+          const githubHelperGeometry = new THREE.BoxGeometry(githubSize.x * githubScaleFactor, githubSize.y * githubScaleFactor, githubSize.z * githubScaleFactor);
+          const githubHelperMaterial = new THREE.MeshBasicMaterial({ visible: false });
+          const githubHitboxMeshLocal = new THREE.Mesh(githubHelperGeometry, githubHelperMaterial);
+          githubHitboxMeshLocal.position.copy(githubMesh.position);
+          githubHitboxMeshLocal.quaternion.copy(githubMesh.quaternion);
+          githubHitboxMeshLocal.updateMatrixWorld();
+          scene.add(githubHitboxMeshLocal);
+          githubHitboxMesh = githubHitboxMeshLocal;
+        }
+        // contact hitbox
+        if (contactMeMesh) {
+          const worldPosition = new THREE.Vector3();
+          const worldQuaternion = new THREE.Quaternion();
+          const worldScale = new THREE.Vector3();
+          contactMeMesh.getWorldPosition(worldPosition);
+          contactMeMesh.getWorldQuaternion(worldQuaternion);
+          contactMeMesh.getWorldScale(worldScale);
+          const contactBox = new THREE.Box3().setFromObject(contactMeMesh);
+          const contactSize = new THREE.Vector3();
+          contactBox.getSize(contactSize);
+          const contactScaleFactor = 5;
+          const contactHelperGeometry = new THREE.BoxGeometry(contactSize.x * contactScaleFactor, contactSize.y * contactScaleFactor, contactSize.z * contactScaleFactor);
+          const contactHelperMaterial = new THREE.MeshBasicMaterial({ visible: false });
+          const contactHitboxMesh = new THREE.Mesh(contactHelperGeometry, contactHelperMaterial);
+          contactHitboxMesh.position.copy(worldPosition);
+          contactHitboxMesh.quaternion.copy(worldQuaternion);
+          contactHitboxMesh.scale.copy(worldScale);
+          contactHitboxMesh.updateMatrixWorld(true);
+          scene.add(contactHitboxMesh);
+          contactMeMesh = contactHitboxMesh;
         }
 
         // Animation mixer setup
