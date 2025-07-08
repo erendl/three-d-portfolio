@@ -84,14 +84,15 @@
 
 .contact-form-overlay {
   position: absolute;
-  padding: 5%;
+
   display: flex;
   justify-content: center;
   align-items: center;
-  background-color: #000000cf;
+  background-color: #000000da;
   border: 2px solid #ffffff;
   z-index: 10;
   color: #ffffff;
+  padding: 3rem;
 }
 .contact-form-overlay input {
   background-color: #00000000;
@@ -145,6 +146,7 @@
 .btnContainer {
   margin: 0px;
   padding: 0px;
+  margin-top: 0.5rem;
   display: flex;
   justify-content: center;
   align-items: center;
