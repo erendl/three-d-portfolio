@@ -2,7 +2,6 @@ import React, { useState } from 'react';
 import Scene from './components/scene'
 import './App.css'
 import Loading from './components/loading'
-import Navbar from './components/navbar'
 import SceneTwo from './components/sceneTwo'
 import ContactForm from './components/contactForm'
 
