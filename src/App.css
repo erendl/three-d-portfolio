@@ -81,3 +81,69 @@
 .navbar li:hover {
   padding: 0.4rem;
 }
+
+.contact-form-overlay {
+  position: absolute;
+  padding: 6rem 4rem;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #000000cf;
+  border: 2px solid #ffffff;
+  z-index: 10;
+  color: #ffffff;
+}
+.contact-form-overlay input {
+  background-color: #00000000;
+  margin-bottom: 2rem;
+  border: 2px solid #ffffff;
+  color: #ededed;
+  font-family: "monospace", sans-serif;
+  width: 100% !important;
+  margin-top: 0.5rem;
+  height: 2rem;
+
+}
+.contact-form-overlay textarea {
+  background-color: #00000000;
+  margin-bottom: 0.5rem;
+  margin-top: 0.5rem;
+  border: 2px solid #ffffff;
+  color: #ededed;
+  font-family: "monospace", sans-serif;
+  width: 100% !important;
+}
+.contact-form-overlay button {
+  background-color: #00000000;
+  border: 2px solid #ffffff;
+  color: #ededed;
+  font-family: "monospace", sans-serif;
+  width: 50% !important;
+  height: 2rem;
+  margin: 0px;
+  padding: 0px;
+
+}
+.contact-form-overlay button:hover {
+  background-color: #ffffff;
+  color: #000000;
+}
+
+.containerForm {
+  position: absolute;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background-color: #00000000 !important;
+  z-index: 9;
+  font-family: "monospace", sans-serif;
+}
+.btnContainer {
+  margin: 0px;
+  padding: 0px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}

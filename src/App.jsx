@@ -4,6 +4,7 @@ import './App.css'
 import Loading from './components/loading'
 import Navbar from './components/navbar'
 import SceneTwo from './components/sceneTwo'
+import ContactForm from './components/contactForm'
 
 function App() {
   const [loading, setLoading] = useState(true);
@@ -18,7 +19,12 @@ function App() {
     <>
       {loading && <Loading />}
       {activeScene === 'scene' && <Scene setLoading={setLoading} setActiveScene={handleSetActiveScene} />}
-      {activeScene === 'sceneTwo' && <SceneTwo setLoading={setLoading} />}
+      {activeScene === 'sceneTwo' && (
+        <div style={{ position: 'relative' }}>
+          <SceneTwo setLoading={setLoading} />
+          <ContactForm className="contact-form-overlay" />
+        </div>
+      )}
     </>
   );
 }
