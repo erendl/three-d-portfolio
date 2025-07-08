@@ -9,10 +9,12 @@ import ContactForm from './components/contactForm'
 function App() {
   const [loading, setLoading] = useState(true);
   const [activeScene, setActiveScene] = useState('scene');
+  const [showContact, setShowContact] = useState(false);
 
   const handleSetActiveScene = (sceneName) => {
     setLoading(true);
     setActiveScene(sceneName);
+    setShowContact(false);
   };
 
   return (
@@ -21,8 +23,8 @@ function App() {
       {activeScene === 'scene' && <Scene setLoading={setLoading} setActiveScene={handleSetActiveScene} />}
       {activeScene === 'sceneTwo' && (
         <div style={{ position: 'relative' }}>
-          <SceneTwo setLoading={setLoading} />
-          <ContactForm className="contact-form-overlay" />
+          <SceneTwo setLoading={setLoading} onContactClick={() => setShowContact(true)} />
+          {showContact && <ContactForm className="contact-form-overlay" onClose={() => setShowContact(false)} />}
         </div>
       )}
     </>

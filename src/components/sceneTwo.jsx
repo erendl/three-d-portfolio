@@ -5,7 +5,7 @@ import { OrbitControls } from 'three/examples/jsm/controls/OrbitControls';
 import { RGBELoader } from 'three/examples/jsm/loaders/RGBELoader';
 
 
-function SceneTwo({ setLoading }) {
+function SceneTwo({ setLoading, onContactClick }) {
     const mousePosition = useRef({ x: 0, y: 0 });
     const scrollDelta = useRef(0);
   
@@ -21,6 +21,7 @@ function SceneTwo({ setLoading }) {
       let githubMesh = null; 
       let linkedinMesh = null; 
       let githubHitboxMesh = null;
+      let contactMeMesh = null;
       const raycaster = new THREE.Raycaster();
       const mouse = new THREE.Vector2();
   
@@ -50,6 +51,13 @@ function SceneTwo({ setLoading }) {
           const intersects = raycaster.intersectObject(linkedinMesh, true);
           if (intersects.length > 0) {
             window.open('https://www.linkedin.com/in/erenozdil/', '_blank');
+            opened = true;
+          }
+        }
+        if (!opened && contactMeMesh && onContactClick) {
+          const intersects = raycaster.intersectObject(contactMeMesh, true);
+          if (intersects.length > 0) {
+            onContactClick();
           }
         }
       }
@@ -85,6 +93,7 @@ function SceneTwo({ setLoading }) {
         // Find the GitHub and LinkedIn meshes by name
         githubMesh = gltf.scene.getObjectByName('GitHub');
         linkedinMesh = gltf.scene.getObjectByName('LinkedIn');
+        contactMeMesh = gltf.scene.getObjectByName('ContactMe');
 
         if (githubMesh) {
           const box = new THREE.Box3().setFromObject(githubMesh);
