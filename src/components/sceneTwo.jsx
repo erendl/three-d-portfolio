@@ -73,14 +73,14 @@ function SceneTwo({ setLoading, onContactClick }) {
           if (githubHitboxMesh) {
             const intersects = raycaster.intersectObject(githubHitboxMesh, true);
             if (intersects.length > 0) {
-              window.open('https://github.com/erendl', '_blank');
+              setTimeout(() => window.open('https://github.com/erendl', '_blank'), 0);
               opened = true;
             }
           }
           if (!opened && linkedinMesh) {
             const intersects = raycaster.intersectObject(linkedinMesh, true);
             if (intersects.length > 0) {
-              window.open('https://www.linkedin.com/in/erenozdil/', '_blank');
+              setTimeout(() => window.open('https://www.linkedin.com/in/erenozdil/', '_blank'), 0);
               opened = true;
             }
           }
@@ -197,12 +197,12 @@ function SceneTwo({ setLoading, onContactClick }) {
           animate();
           if (setLoading) setLoading(false);
           window.addEventListener('click', onClick);
-          renderer.domElement.addEventListener('touchstart', onTouch, { passive: false });
+          renderer.domElement.addEventListener('touchend', onTouch, { passive: false });
         return () => {
           window.removeEventListener('mousemove', handleMouseMove);
           window.removeEventListener('wheel', handleWheel);
           window.removeEventListener('click', onClick);
-          renderer.domElement.removeEventListener('touchstart', onTouch);
+          renderer.domElement.removeEventListener('touchend', onTouch);
           document.body.removeChild(renderer.domElement);
         };
       });
