@@ -8,6 +8,7 @@ import { CSS2DRenderer, CSS2DObject } from 'three/examples/jsm/renderers/CSS2DRe
 function Scene({ setLoading, setActiveScene }) {
   const mousePosition = useRef({ x: 0, y: 0 });
   const aboutMeMeshRef = useRef(null);
+  const aboutMeHitboxRef = useRef(null); 
 
   useEffect(() => {
     // THREE.js scene 
@@ -45,15 +46,23 @@ function Scene({ setLoading, setActiveScene }) {
       mouse.x = (event.clientX / window.innerWidth) * 2 - 1;
       mouse.y = -(event.clientY / window.innerHeight) * 2 + 1;
       raycaster.setFromCamera(mouse, camera);
-      const aboutMeMesh = aboutMeMeshRef.current;
-      if (aboutMeMesh) {
-        let intersectMeshes = [aboutMeMesh];
-        if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
-          intersectMeshes = aboutMeMesh.children;
-        }
-        const intersects = raycaster.intersectObjects(intersectMeshes, true);
+      const hitbox = aboutMeHitboxRef.current;
+      if (hitbox) {
+        const intersects = raycaster.intersectObject(hitbox, true);
         if (intersects.length > 0) {
           if (setActiveScene) setActiveScene('sceneTwo');
+        }
+      } else {
+        const aboutMeMesh = aboutMeMeshRef.current;
+        if (aboutMeMesh) {
+          let intersectMeshes = [aboutMeMesh];
+          if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
+            intersectMeshes = aboutMeMesh.children;
+          }
+          const intersects = raycaster.intersectObjects(intersectMeshes, true);
+          if (intersects.length > 0) {
+            if (setActiveScene) setActiveScene('sceneTwo');
+          }
         }
       }
     }
@@ -65,15 +74,23 @@ function Scene({ setLoading, setActiveScene }) {
         mouse.x = (touch.clientX / window.innerWidth) * 2 - 1;
         mouse.y = -(touch.clientY / window.innerHeight) * 2 + 1;
         raycaster.setFromCamera(mouse, camera);
-        const aboutMeMesh = aboutMeMeshRef.current;
-        if (aboutMeMesh) {
-          let intersectMeshes = [aboutMeMesh];
-          if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
-            intersectMeshes = aboutMeMesh.children;
-          }
-          const intersects = raycaster.intersectObjects(intersectMeshes, true);
+        const hitbox = aboutMeHitboxRef.current;
+        if (hitbox) {
+          const intersects = raycaster.intersectObject(hitbox, true);
           if (intersects.length > 0) {
             if (setActiveScene) setActiveScene('sceneTwo');
+          }
+        } else {
+          const aboutMeMesh = aboutMeMeshRef.current;
+          if (aboutMeMesh) {
+            let intersectMeshes = [aboutMeMesh];
+            if (aboutMeMesh.children && aboutMeMesh.children.length > 0) {
+              intersectMeshes = aboutMeMesh.children;
+            }
+            const intersects = raycaster.intersectObjects(intersectMeshes, true);
+            if (intersects.length > 0) {
+              if (setActiveScene) setActiveScene('sceneTwo');
+            }
           }
         }
         event.preventDefault();
@@ -108,6 +125,10 @@ function Scene({ setLoading, setActiveScene }) {
 
       // OrbitControls setup
       const controls = new OrbitControls(camera, renderer.domElement);
+      controls.minDistance = -5.5;
+      controls.maxDistance = 10;
+
+      // Camera position and rotation
       camera.rotation.set(-0.4314569990246626, 0.5350401718310553, 0.28675455599246913);
       camera.position.set(2.522228232880101, 2.426328964614322, 3.9387430148330766);
       const initialRotation = camera.rotation.clone();
@@ -135,14 +156,14 @@ function Scene({ setLoading, setActiveScene }) {
       terminalDiv.style.backgroundSize = 'cover';
       terminalDiv.style.backgroundPosition = 'center';
       terminalDiv.style.backgroundOpacity = '0.5';
-      terminalDiv.style.width = '320px'; // Fixed width
-      terminalDiv.style.height = '240px'; // Fixed height
+      terminalDiv.style.width = '320px'; 
+      terminalDiv.style.height = '240px'; 
       terminalDiv.style.display = 'flex';
       terminalDiv.style.alignItems = 'center';
       terminalDiv.style.justifyContent = 'center';
       terminalDiv.style.overflow = 'hidden';
       const terminalLabel = new CSS2DObject(terminalDiv);
-      terminalLabel.position.set(0, -2, 0); // Position below About Me
+      terminalLabel.position.set(0, -2, 0); 
       scene.add(terminalLabel);
 
       // Animate text letter by letter for intro
@@ -203,7 +224,7 @@ function Scene({ setLoading, setActiveScene }) {
 
         // THREE video texture
         const videoTexture = new THREE.VideoTexture(video);
-        videoTexture.minFilter = THREE.LinearMipMapLinearFilter; // Use mipmaps for smoother scaling
+        videoTexture.minFilter = THREE.LinearMipMapLinearFilter;
         videoTexture.magFilter = THREE.LinearFilter;
         videoTexture.format = THREE.RGBAFormat;
         videoTexture.generateMipmaps = true;
@@ -218,9 +239,38 @@ function Scene({ setLoading, setActiveScene }) {
       // --- END VIDEO TEXTURE ---
 
       aboutMeMeshRef.current = gltf.scene.getObjectByName('aboutMe');
-  
 
-
+      // HITBOX FOR aboutMe
+      let aboutMeHitboxMesh = null;
+      if (aboutMeMeshRef.current) {
+        const aboutMeMesh = aboutMeMeshRef.current;
+        const aboutMeBox = new THREE.Box3().setFromObject(aboutMeMesh);
+        const aboutMeSize = new THREE.Vector3();
+        aboutMeBox.getSize(aboutMeSize);
+        const aboutMeScaleX = 2;
+        const aboutMeScaleY = 0.01;
+        const aboutMeScaleZ = 0.3;
+        const aboutMeHelperGeometry = new THREE.BoxGeometry(
+          aboutMeSize.x * aboutMeScaleX,
+          aboutMeSize.y * aboutMeScaleY,
+          aboutMeSize.z * aboutMeScaleZ
+        );
+        const aboutMeHelperMaterial = new THREE.MeshBasicMaterial({
+          color: 0x00ff00,
+          transparent: true,
+          opacity: 0.3,    
+          visible: false  
+        });
+        aboutMeHitboxMesh = new THREE.Mesh(aboutMeHelperGeometry, aboutMeHelperMaterial);
+        aboutMeHitboxMesh.position.copy(aboutMeMesh.position);
+        aboutMeHitboxMesh.quaternion.copy(aboutMeMesh.quaternion);
+        aboutMeHitboxMesh.position.x += 0.8;
+        aboutMeHitboxMesh.position.y += 0.5;
+        aboutMeHitboxMesh.position.z += -0.1;
+        aboutMeHitboxMesh.updateMatrixWorld();
+        scene.add(aboutMeHitboxMesh);
+        aboutMeHitboxRef.current = aboutMeHitboxMesh;
+      }
 
       renderer.domElement.addEventListener('click', onClick);
       renderer.domElement.addEventListener('touchstart', onTouch, { passive: false });

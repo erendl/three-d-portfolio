@@ -166,6 +166,10 @@ function SceneTwo({ setLoading, onContactClick }) {
         // OrbitControls setup
         const controls = new OrbitControls(camera, renderer.domElement);
         
+        // Camera zoom limits
+        controls.minDistance = -1.5;
+        controls.maxDistance = 1;
+        
         controls.enableDamping = true;
         camera.position.set(-0.5256585328246953, 0.6154948028987944, -0.27029663282417665);
         camera.rotation.set(-2.970708832007452, -0.006149622266331087, -3.1405314398888207);
