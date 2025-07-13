@@ -73,14 +73,14 @@ function SceneTwo({ setLoading, onContactClick }) {
           if (githubHitboxMesh) {
             const intersects = raycaster.intersectObject(githubHitboxMesh, true);
             if (intersects.length > 0) {
-              window.location.href = 'https://github.com/erendl';
+              window.open('https://github.com/erendl', '_blank');
               opened = true;
             }
           }
           if (!opened && linkedinMesh) {
             const intersects = raycaster.intersectObject(linkedinMesh, true);
             if (intersects.length > 0) {
-              window.location.href = 'https://www.linkedin.com/in/erenozdil/';
+              window.open('https://www.linkedin.com/in/erenozdil/', '_blank');
               opened = true;
             }
           }
