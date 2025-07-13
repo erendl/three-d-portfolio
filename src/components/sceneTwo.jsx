@@ -73,26 +73,14 @@ function SceneTwo({ setLoading, onContactClick }) {
           if (githubHitboxMesh) {
             const intersects = raycaster.intersectObject(githubHitboxMesh, true);
             if (intersects.length > 0) {
-              const link = document.createElement('a');
-              link.href = 'https://github.com/erendl';
-              link.target = '_blank';
-              link.rel = 'noopener noreferrer';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+              window.location.href = 'https://github.com/erendl';
               opened = true;
             }
           }
           if (!opened && linkedinMesh) {
             const intersects = raycaster.intersectObject(linkedinMesh, true);
             if (intersects.length > 0) {
-              const link = document.createElement('a');
-              link.href = 'https://www.linkedin.com/in/erenozdil/';
-              link.target = '_blank';
-              link.rel = 'noopener noreferrer';
-              document.body.appendChild(link);
-              link.click();
-              document.body.removeChild(link);
+              window.location.href = 'https://www.linkedin.com/in/erenozdil/';
               opened = true;
             }
           }
